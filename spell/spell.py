@@ -1,6 +1,6 @@
 class Spell:
 
-    def __init__(self,name=None, damage=0, mana_cost=0, cast_range=0):
+    def __init__(self,name, damage, mana_cost, cast_range):
         self._name = name
         self._damage = damage
         self._mana_cost = mana_cost
