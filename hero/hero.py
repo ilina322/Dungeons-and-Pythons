@@ -28,16 +28,7 @@ class Hero(Person):
         return 0
 
 def main():
-    h = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
-    s = Spell('aha', 30, 4, 3)
-    w = Weapon( ' ass', -20)
-    w1 = Weapon( ' ass', 20)
-
-    h.equip(w)
-    h.learn(s)
-    h.equip(w1)
-
-    print(h.attack(by = 'weapon'))
+    pass
 
 
 if __name__ == "__main__":
