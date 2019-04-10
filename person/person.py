@@ -2,8 +2,10 @@ import sys
 sys.path.insert(0, '../spell')
 from spell import *
 class Person:
-    def __init__(self, health=20, mana=10):
-        self.max_health = health
+    def __init__(self, health, mana, mana_regeneration_rate):
+        self._mana_regeneration_rate = mana_regeneration_rate
+        self._max_health = health
+        self._max_mana = mana
         self._health = health
         self._mana = mana
 
@@ -26,9 +28,15 @@ class Person:
             return False
         else:
             self._health += healing
-            if self._health > self.max_health:
-                self._health = self.max_health
+            if self._health > self._max_health:
+                self._health = self._max_health
         return True
+
+    def take_mana(self):
+        self._mana += self._mana_regeneration_rate
+        if self._mana > self._max_mana:
+            self._mana = self._max_mana
+
 
     def attack():
         pass

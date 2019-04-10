@@ -1,58 +1,14 @@
-import random
-class Enemy:
-
-
+import sys
+sys.path.insert(0, '../person')
+from person import *
+class Enemy(Person):
     def __init__(self, health=20, mana=10, damage=10):
-        self.mana_regeneration_rate = mana_regeneration_rate
-        self.max_health = health
-        self.health = health
-        self.mana = mana
-        self.damage = damage
-
+        super().__init__(health, mana)
+        self._damage = damage
 
     def __str__(self):
-        pass
+        return 'health: {0}\nmana: {1}\ndamage:{2}'.format(self._health, self._mana, self._damage)
+        
 
-
-
-    def is_alive(self):
-        if self._health > 0:
-            return True
-        else:
-            return False
-
-    def can_cast(self):
-        if self.mana > 0: #TODO: check current spell mana_cost
-            return True
-        else:
-            return False
-
-    @property
-    def health(self):
-        return self.health
-
-    @property
-    def damage(self):
-        return self.damage
-
-    @property
-    def mana(self):
-        return self.mana
-
-    def take_healing(self, healing):
-        if not self.is_alive():
-            return False
-        else:
-            self._health += healing
-            if self.health > self.max_health:
-                self.health = self.max_health
-        return True
-
-    def take_mana(self):
-        self.mana += self.mana_regeneration_rate
-
-    def attack():
-        pass
-
-    def take_damage(self, damage):
-        self.health -= damage
+e = Enemy(health=20, mana=20, damage=20)
+print(str(e))
