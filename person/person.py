@@ -1,6 +1,7 @@
 import sys
 sys.path.insert(0, '../spell')
 from spell import *
+
 class Person:
     def __init__(self, health, mana, mana_regeneration_rate):
         self._mana_regeneration_rate = mana_regeneration_rate
@@ -8,6 +9,8 @@ class Person:
         self._max_mana = mana
         self._health = health
         self._mana = mana
+        self._weapon = None
+        self._spell = None
 
     def is_alive(self):
         return self._health > 0
@@ -42,3 +45,10 @@ class Person:
 
     def take_damage(self, damage):
         self._health -= damage
+
+
+    def equip(self, weapon):
+        self._weapon = weapon
+
+    def learn(self, spell):
+        self._spell = spell
