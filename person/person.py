@@ -37,7 +37,6 @@ class Person:
         if self._mana > self._max_mana:
             self._mana = self._max_mana
 
-
     def attack():
         pass
 
