@@ -1,9 +1,10 @@
 import sys
 sys.path.insert(0, '../person')
+sys.path.insert(0, '../weapon')
 from person import *
 class Enemy(Person):
-    def __init__(self, health=20, mana=10, damage=10):
-        super().__init__(health, mana)
+    def __init__(self, health, mana, damage, mana_regeneration_rate):
+        super().__init__(health, mana, mana_regeneration_rate)
         self._damage = damage
 
     def __str__(self):
@@ -13,15 +14,11 @@ class Enemy(Person):
     def damage(self):
         return self._damage
 
-    def attack(self, by):
+    def attack(self, by=None):
         if by == 'weapon':
             if self._weapon != None:
                 return self._weapon.damage
-        else:
+        elif by == 'spell':
             if self._spell != None:
                 return self._spell.damage
         return self._damage
-
-    
-e = Enemy(health=20, mana=20, damage=20)
-print(str(e))

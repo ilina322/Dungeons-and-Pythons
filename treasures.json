@@ -1,0 +1,68 @@
+{
+  "spells":
+    [
+      {
+        "name": "Chaos Burst",
+        "damage": 20,
+        "mana_cost": 20,
+        "cast_range": 3
+      },
+      {
+        "name": "Demonic Shower",
+        "damage": 25,
+        "mana_cost": 10,
+        "cast_range": 2
+      },
+      {
+        "name": "Rain of Hell",
+        "damage": 10,
+        "mana_cost": 5,
+        "cast_range": 1
+      },
+      {
+        "name": "Electric Bolt",
+        "damage": 30,
+        "mana_cost": 25,
+        "cast_range": 1
+      },
+      {
+        "name": "Hex of Darkness",
+        "damage": 15,
+        "mana_cost": 10,
+        "cast_range": 1
+      },
+      {
+        "name": "Judgement Aura",
+        "damage": 10,
+        "mana_cost": 20,
+        "cast_range": 5
+      }
+  ],
+    "weapons":
+    [
+      {
+        "name": "Axe",
+        "damage": 20
+      },
+      {
+        "name": "Yatagan",
+        "damage": 35
+      },
+      {
+        "name": "Battle axe ",
+        "damage": 25
+      },
+      {
+        "name": "Longsword",
+        "damage": 30
+      },
+      {
+        "name": "Spear",
+        "damage": 15
+      },
+      {
+        "name": "Fist fight skill",
+        "damage": 10
+      }
+  ]
+}
