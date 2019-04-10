@@ -2,7 +2,9 @@ import unittest
 from person import *
 import sys
 sys.path.insert(0, '../spell')
+sys.path.insert(0, '../weapon')
 from spell import *
+from weapon import *
 
 class TestPerson(unittest.TestCase):
 
@@ -38,11 +40,24 @@ class TestPerson(unittest.TestCase):
         s = Spell(name='Fireball', damage=10, mana_cost=20, cast_range=1)
         self.assertFalse(p.can_cast(s))
 
-    def test_when_take_mana_then__add_mana_points_to_mana(self):
+    def test_when_take_mana_then_add_mana_points_to_mana(self):
         p = Person(health=100, mana=100, mana_regeneration_rate=10)
         p._mana -= 30
         p.take_mana()
         self.assertEqual(p.mana, 80)
+
+    def test_when_equip_person_then_set_person_weapon_to_given_one(self):
+        p = Person(health=100, mana=100, mana_regeneration_rate=10)
+        w = Weapon( 'ass', 20)
+        p.equip(w)
+        self.assertEqual(p._weapon, w)
+
+
+    def test_learn_method_that_sets_person_spell_to_given_one(self):
+        p = Person(health=100, mana=100, mana_regeneration_rate=10)
+        s = Spell('aha', 30, 4, 3)
+        p.learn(s)
+        self.assertEqual(p._spell, s)
 
 if __name__ == '__main__':
     unittest.main()
