@@ -1,4 +1,5 @@
-
+import random
+import json
 import sys
 sys.path.insert(0, '../hero')
 from hero import *
@@ -20,6 +21,7 @@ class Dungeon:
             list_col = [sympol for sympol in row]
             map_list.append(list_col)
 
+        f.close()
         return map_list
 
 
@@ -36,12 +38,47 @@ class Dungeon:
                     return True
         return False
 
+    def generate_random_spell(self):
+        with open('treasures.json') as data:
+            treasures = json.load(data)
+        spells = treasures['spells']
+        spell_dict = random.choice(spells)
+        return Spell(**spell_dict)
+
+    def generate_random_weapon(self):
+        with open('treasures.json') as data:
+            treasures = json.load(data)
+        weapons = treasures['weapons']
+        weapon_dict = random.choice(weapons)
+        return Weapon(**weapon_dict)
+
+    def win_random_treasure(self):
+        treasure = random.randint(1,4)
+        if treasure == 1:
+            mana_points = random.randint(1,30)
+            print(str(mana_points) + " mana!")
+        elif treasure == 2:
+            health_points = random.randint(1,30)
+            print(str(health_points) + " health!")
+        elif treasure == 3:
+            weapon = self.generate_random_weapon()
+            print(weapon.name + " found!")
+            #equip hero with weapon
+        elif treasure == 4:
+            spell = self.generate_random_spell()
+            print(spell.name + " learned!")
+            #learn spell
+
+
+    
+
     def can_move(self, row, col):
 
         if col >= len(self._map[0]) or col < 0 or row >= len(self._map) or row < 0 or self._map[row][col] == '#':
             return False
 
         elif self._map[row][col] == 'T':
+            self.win_random_treasure()
             return 'Found treasure!'
 
         elif self._map[row][col] == 'E':
@@ -81,8 +118,6 @@ class Dungeon:
             self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
 
         return can_move_on
-
-
 
 
 

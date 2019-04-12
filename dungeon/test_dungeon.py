@@ -74,7 +74,15 @@ class TestClassDungeon(unittest.TestCase):
         d.spawn()
         self.assertEqual(d.move_hero('up'), False)
 
+    def test_when_generate_random_spell_then_return_spell_instance(self):
+        d = Dungeon('level.txt')
+        s = d.generate_random_spell()
+        self.assertTrue(isinstance(s, Spell)) 
 
+    def test_when_generate_random_weapon_then_return_weapon_instance(self):
+        d = Dungeon('level.txt')
+        w = d.generate_random_weapon()
+        self.assertTrue(isinstance(w, Weapon)) 
 
 
 
