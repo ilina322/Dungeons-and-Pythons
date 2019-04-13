@@ -3,8 +3,8 @@ sys.path.insert(0, '../person')
 sys.path.insert(0, '../weapon')
 from person import *
 class Enemy(Person):
-    def __init__(self, health, mana, damage, mana_regeneration_rate):
-        super().__init__(health, mana, mana_regeneration_rate)
+    def __init__(self, health, mana, damage):
+        super().__init__(health, mana)
         self._damage = damage
 
     def __str__(self):
