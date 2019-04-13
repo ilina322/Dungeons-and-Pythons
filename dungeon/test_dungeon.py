@@ -84,6 +84,12 @@ class TestClassDungeon(unittest.TestCase):
         w = d.generate_random_weapon()
         self.assertTrue(isinstance(w, Weapon)) 
 
+    def test_hero_attack_when_weapon_is_passed_then_return_true_if_hero_is_equip_with_weapon(self):
+        d = Dungeon('level.txt')
+        d.spawn()
+        d.hero.equip('hammer')
+        self.assertEqual(d.hero_attack('weapon'), True)
+
 
 
 
