@@ -29,8 +29,8 @@ class Dungeon:
         for row in self._map:
             print(''.join(row))
 
-    def spawn(self):
-        self.hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
+    def spawn(self, hero):
+        self.hero = hero
         for row in range(len(self._map)):
             for col in range(len(self._map[0])):
                 if self._map[row][col] == 'S':
@@ -63,13 +63,13 @@ class Dungeon:
         elif treasure == 3:
             weapon = self.generate_random_weapon()
             print(weapon.name + " found!")
-            if hero != None:
-                hero.equip(weapon)
+            if self.hero != None:
+                self.hero.equip(weapon)
         elif treasure == 4:
             spell = self.generate_random_spell()
             print(spell.name + " learned!")
-            if hero != None:
-                hero.learn(spell)
+            if self.hero != None:
+                self.hero.learn(spell)
 
     def start_battle(self):
         pass
@@ -77,14 +77,6 @@ class Dungeon:
     def can_move(self, row, col):
         if col >= len(self._map[0]) or col < 0 or row >= len(self._map) or row < 0 or self._map[row][col] == '#':
             return False
-
-        elif self._map[row][col] == 'T':
-            self.win_random_treasure()
-            return 'Found treasure!'
-
-        elif self._map[row][col] == 'E':
-            return 'Start a fight!'
-
         return True
 
     def find_hero_position(self):
@@ -115,8 +107,16 @@ class Dungeon:
             new_hero_position = (curr_hero_position[0], curr_hero_position[1] + 1)
 
         if can_move_on:
-            self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
-            self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
+            if self._map[new_hero_position[0]][new_hero_position[1]] == "T":
+                print('Found treasure!')
+                self.win_random_treasure()
+                self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
+                self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
+            elif self._map[new_hero_position[0]][new_hero_position[1]] == "E":
+                print('Start a fight!')
+            else:
+                self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
+                self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
 
         return can_move_on
 
