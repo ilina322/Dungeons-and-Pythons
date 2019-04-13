@@ -84,11 +84,30 @@ class TestClassDungeon(unittest.TestCase):
         w = d.generate_random_weapon()
         self.assertTrue(isinstance(w, Weapon)) 
 
-    def test_hero_attack_when_weapon_is_passed_then_return_true_if_hero_is_equip_with_weapon(self):
+    def test_hero_attack_when_weapon_is_passed_then_return_true_if_hero_is_equipped_with_weapon(self):
         d = Dungeon('level.txt')
         d.spawn()
         d.hero.equip('hammer')
         self.assertEqual(d.hero_attack('weapon'), True)
+
+    def test_hero_attack_when_weapon_is_passed_then_return_false_if_hero_is_not_equipped_with_weapon(self):
+        d = Dungeon('level.txt')
+        d.spawn()
+        self.assertEqual(d.hero_attack('weapon'), False)
+
+    def test_hero_attack_when_spell_is_passed_then_return_true_if_hero_has_learned_a_spell(self):
+        d = Dungeon('level.txt')
+        d.spawn()
+        d.hero.learn('black magic')
+        self.assertEqual(d.hero_attack('spell'), True)
+
+
+    def test_hero_attack_when_spell_is_passed_then_return_false_if_hero_has_not_learned_spell(self):
+        d = Dungeon('level.txt')
+        d.spawn()
+        self.assertEqual(d.hero_attack('spell'), False)
+
+
 
 
 
