@@ -91,32 +91,74 @@ class TestClassDungeon(unittest.TestCase):
         w = d.generate_random_weapon()
         self.assertTrue(isinstance(w, Weapon)) 
 
-    def test_hero_attack_when_weapon_is_passed_then_return_true_if_hero_is_equipped_with_weapon(self):
+    def test_check_for_enemy_in_range_when_is_passed_hero_spell_range_and_there_is_no_enemy_in_this_range_then_returns_false(self):
         d = Dungeon('level.txt')
         hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
         d.spawn(hero)
-        d.hero.equip('hammer')
-        self.assertEqual(d.hero_attack('weapon'), True)
+        spell = Spell(name='Fireball', damage=10, mana_cost=20, cast_range=2)
+        d.hero.learn(spell)
+        self.assertFalse(d.check_for_enemy_in_range(spell.cast_range))
 
-    def test_hero_attack_when_weapon_is_passed_then_return_false_if_hero_is_not_equipped_with_weapon(self):
+    def test_check_for_enemy_in_range_when_is_passed_hero_spell_range_and_there_is_enemy_in_this_range_then_returns_true(self):
         d = Dungeon('level.txt')
         hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
         d.spawn(hero)
-        self.assertEqual(d.hero_attack('weapon'), False)
+        d.move_hero('left')
+        spell = Spell(name='Fireball', damage=10, mana_cost=20, cast_range=2)
+        d.hero.learn(spell)
+        self.assertTrue(d.check_for_enemy_in_range(spell.cast_range))
 
-    def test_hero_attack_when_spell_is_passed_then_return_true_if_hero_has_learned_a_spell(self):
+    def test_hero_attack_when_is_passed_weapon_and_hero_is_not_equipped_with_any_weapon_then_print_message(self):
         d = Dungeon('level.txt')
         hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
         d.spawn(hero)
-        d.hero.learn('black magic')
-        self.assertEqual(d.hero_attack('spell'), True)
+        message = 'you are not equipped '
+        self.assertEqual(d.hero_attack('weapon'), print(message))
 
-
-    def test_hero_attack_when_spell_is_passed_then_return_false_if_hero_has_not_learned_spell(self):
+    def test_hero_attack_when_is_passed_weapon_and_hero_is_not_in_fight_then_print_message(self):
         d = Dungeon('level.txt')
         hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
         d.spawn(hero)
-        self.assertEqual(d.hero_attack('spell'), False)
+        w = Weapon( 'hammer', 20)
+        hero.equip(w)
+        message = 'you should be in fight in order to use your weapon'
+        self.assertEqual(d.hero_attack('weapon'), print(message))
+
+    def test_hero_attack_when_is_passed_weapon_and_hero_is_in_fight_then_return_true(self):
+        d = Dungeon('level.txt')
+        hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
+        d.spawn(hero)
+        w = Weapon( 'hammer', 20)
+        hero.equip(w)
+        d.move_hero('left')
+        d.move_hero('down')
+        d.move_hero('down')
+        self.assertTrue(d.hero_attack('weapon'))
+
+    def test_hero_attack_when_is_passed_spell_and_hero_do_not_know_any_spell_then_print_message(self):
+        d = Dungeon('level.txt')
+        hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
+        d.spawn(hero)
+        message = 'you do not know any spell'
+        self.assertEqual(d.hero_attack('weapon'), print(message))
+
+    def test_hero_attack_when_is_passed_spell_and_there_is_no_enemy_in_hero_cast_range_then_print_message(self):
+        d = Dungeon('level.txt')
+        hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
+        d.spawn(hero)
+        spell = Spell(name='Fireball', damage=10, mana_cost=20, cast_range=2)
+        d.hero.learn(spell)
+        message = 'Nothing in casting range {}'.format(d.hero._spell.cast_range)
+        self.assertEqual(d.hero_attack('spell'), print(message))
+
+    def test_hero_attack_when_is_passed_spell_and_there_is_enemy_in_hero_cast_range_then_return_true(self):
+        d = Dungeon('level.txt')
+        hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
+        d.spawn(hero)
+        spell = Spell(name='Fireball', damage=10, mana_cost=20, cast_range=2)
+        d.hero.learn(spell)
+        d.move_hero('left')
+        self.assertTrue(d.hero_attack('spell'))
 
 
 
