@@ -24,6 +24,7 @@ class Hero(Person):
                 return self._weapon.damage
         else:
             if self._spell != None:
+                self._mana -= self._spell.mana_cost
                 return self._spell.damage
         return 0
 

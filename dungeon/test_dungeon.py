@@ -160,6 +160,8 @@ class TestClassDungeon(unittest.TestCase):
         d.move_hero('left')
         self.assertTrue(d.hero_attack('spell'))
 
+    def test_when_treasure_is_
+
 
 
 if __name__ == '__main__':

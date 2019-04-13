@@ -1,6 +1,8 @@
 import sys
 sys.path.insert(0, '../spell')
+sys.path.insert(0, '../weapon')
 from spell import *
+from weapon import *
 
 class Person:
     def __init__(self, health, mana, mana_regeneration_rate):
@@ -26,6 +28,14 @@ class Person:
     def mana(self):
         return self._mana
 
+    @property
+    def weapon(self):
+        return self._weapon
+
+    @property
+    def spell(self):
+        return self._spell
+
     def take_healing(self, healing):
         if not self.is_alive():
             return False
@@ -39,9 +49,6 @@ class Person:
         self._mana += self._mana_regeneration_rate
         if self._mana > self._max_mana:
             self._mana = self._max_mana
-
-    def attack():
-        pass
 
     def take_damage(self, damage):
         self._health -= damage
