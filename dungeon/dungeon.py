@@ -63,11 +63,16 @@ class Dungeon:
         elif treasure == 3:
             weapon = self.generate_random_weapon()
             print(weapon.name + " found!")
-            #equip hero with weapon
+            if hero != None:
+                hero.equip(weapon)
         elif treasure == 4:
             spell = self.generate_random_spell()
             print(spell.name + " learned!")
-            #learn spell
+            if hero != None:
+                hero.learn(spell)
+
+    def start_battle(self):
+        pass
 
     def can_move(self, row, col):
 
