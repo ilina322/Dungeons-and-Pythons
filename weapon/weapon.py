@@ -2,14 +2,22 @@
 class Weapon:
 
     def __init__(self, name, damage):
-        self.name = name
-        self.damage = damage
+        self._name = name
+        self._damage = damage
 
     def __str__(self):
-        return 'name: {} \ndamage: {}'.format(self.name, self.damage)
+        return 'name: {} \ndamage: {}'.format(self._name, self._damage)
 
     def __repr__(self):
         return str(self)
+
+    @property
+    def damage(self):
+        return self._damage
+
+    @property
+    def name(self):
+        return self._name
 
 def main():
     pass

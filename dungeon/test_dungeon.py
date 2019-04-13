@@ -107,6 +107,8 @@ class TestClassDungeon(unittest.TestCase):
         d.spawn()
         self.assertEqual(d.hero_attack('spell'), False)
 
+    def test_when_treasure_is_
+
 
 
 if __name__ == '__main__':

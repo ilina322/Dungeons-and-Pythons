@@ -75,7 +75,6 @@ class Dungeon:
         pass
 
     def can_move(self, row, col):
-
         if col >= len(self._map[0]) or col < 0 or row >= len(self._map) or row < 0 or self._map[row][col] == '#':
             return False
 
