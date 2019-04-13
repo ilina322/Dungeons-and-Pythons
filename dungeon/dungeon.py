@@ -124,7 +124,7 @@ class Dungeon:
     def hero_attack(self, by):
         if by == 'weapon':
             return self.hero._weapon != None
-        return self.hero.spell != None
+        return self.hero._spell != None
 
 
 
