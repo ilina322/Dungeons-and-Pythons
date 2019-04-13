@@ -10,8 +10,8 @@ class Dungeon:
         self._map = self.create_map()
 
     def create_map(self):
-        f = open(self.file_name, 'r')
-        map_str = f.read()
+        with open(self.file_name, 'r') as f:
+            map_str = f.read()
         map_lst = map_str.split('\n')
         if len(map_lst) == 1 and len(map_lst[0]) == 0:
             return []
@@ -21,7 +21,6 @@ class Dungeon:
             list_col = [sympol for sympol in row]
             map_list.append(list_col)
 
-        f.close()
         return map_list
 
 
