@@ -34,6 +34,13 @@ class TestDungeonsAndPythonsClassHero(unittest.TestCase):
         h.learn(s)
         self.assertEqual(h.attack('spell'), 30)
 
+    def test_when_attack_by_spell_then_take_mana_points_from_hero(self):
+        h = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
+        s = Spell('aha', 30, 20, 3)
+        h.learn(s)
+        h.attack(by='spell')
+        self.assertEqual(h.mana, 80)
+
 
 
 if __name__ == '__main__':
