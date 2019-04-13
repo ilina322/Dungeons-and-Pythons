@@ -90,9 +90,6 @@ class TestClassDungeon(unittest.TestCase):
         d.hero.equip('hammer')
         self.assertEqual(d.hero_attack('weapon'), True)
 
-<<<<<<< HEAD
-    
-=======
     def test_hero_attack_when_weapon_is_passed_then_return_false_if_hero_is_not_equipped_with_weapon(self):
         d = Dungeon('level.txt')
         d.spawn()
@@ -110,10 +107,6 @@ class TestClassDungeon(unittest.TestCase):
         d.spawn()
         self.assertEqual(d.hero_attack('spell'), False)
 
-
-
-
->>>>>>> 1a8727f5c1e3b967dbcebe4edd19aebd9a8b0cab
 
 
 if __name__ == '__main__':
