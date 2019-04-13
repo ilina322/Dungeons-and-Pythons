@@ -8,6 +8,7 @@ class Dungeon:
     def __init__(self, file_name):
         self.file_name = file_name
         self._map = self.create_map()
+        self.hero = None
 
     def create_map(self):
         with open(self.file_name, 'r') as f:
@@ -29,7 +30,7 @@ class Dungeon:
             print(''.join(row))
 
     def spawn(self):
-        hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
+        self.hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
         for row in range(len(self._map)):
             for col in range(len(self._map[0])):
                 if self._map[row][col] == 'S':
@@ -67,9 +68,6 @@ class Dungeon:
             spell = self.generate_random_spell()
             print(spell.name + " learned!")
             #learn spell
-
-
-    
 
     def can_move(self, row, col):
 
@@ -117,6 +115,14 @@ class Dungeon:
             self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
 
         return can_move_on
+
+    def hero_attack(self, by):
+        if by == 'weapon':
+            return self.hero._weapon != None
+        return self.hero.spell != None
+
+
+
 
 
 
