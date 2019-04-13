@@ -9,6 +9,7 @@ class Dungeon:
         self.file_name = file_name
         self._map = self.create_map()
         self.hero = None
+        self.in_fight = False
 
     def create_map(self):
         with open(self.file_name, 'r') as f:
@@ -114,21 +115,46 @@ class Dungeon:
                 self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
             elif self._map[new_hero_position[0]][new_hero_position[1]] == "E":
                 print('Start a fight!')
+                self.in_fight = True
+                if self.hero_attack(by='weapon') or self.hero_attack(by='spell'):
+                    pass
+                #return False
             else:
                 self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
                 self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
 
         return can_move_on
 
+    def check_for_enemy_in_range(self, spell_range):
+        curr_hero_position = self.find_hero_position()
+        row = curr_hero_position[0]
+        col = curr_hero_position[1]
+        for num in range(1, spell_range + 1):
+            if self._map[row + num][col] == 'E':
+                return True
+            elif self._map[row][col + num] == 'E':
+                return True
+            elif self._map[row - num][col] == 'E':
+                return True
+            elif self._map[row][col - num] == 'E':
+                return True
+        return False
+
+
     def hero_attack(self, by):
+        curr_hero_position = self.find_hero_position()
         if by == 'weapon':
-            return self.hero._weapon != None
-        return self.hero._spell != None
-
-
-
-
-
-
-
+            if self.hero._weapon != None:
+               if self.in_fight:
+                   return True
+               print('you should be in fight in order to use your weapon')
+            else:
+                print('you are not equipped')
+        else:
+            if self.hero._spell != None:
+              if self.check_for_enemy_in_range(self.hero._spell.cast_range):
+                  return True
+              print('Nothing in casting range {}'.format(self.hero._spell.cast_range))
+            else:
+                print('you do not know any spell')
 
