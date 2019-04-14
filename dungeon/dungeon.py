@@ -4,9 +4,11 @@ import sys
 sys.path.insert(0, '../hero')
 sys.path.insert(0, '../enemy')
 sys.path.insert(0, '../fight')
+sys.path.insert(0, '../person')
 from hero import *
 from enemy import *
 from fight import *
+from person import *
 
 class Dungeon:
     def __init__(self, file_name):
@@ -37,7 +39,6 @@ class Dungeon:
                 if self._map[row][col] == 'E':
                     new_enemy = Enemy(health = random.randint(1,10)*10, mana = random.randint(1,15)*10, damage = random.randint(1,15)*10)
                     self.enemies.update({(row, col) : new_enemy})
-
 
     def print_map(self):
         for row in self._map:
@@ -85,9 +86,27 @@ class Dungeon:
             if self.hero != None:
                 self.hero.learn(spell)
 
-    def start_battle(self, enemy):
-        fight = Fight(self.hero, enemy)
-        fight.start()
+    def equip_enemy(self, enemy):
+        random_equip_enemy = random.randint(1,3)
+        if random_equip_enemy == 1:
+            spell = self.generate_random_spell()
+            enemy.learn(spell)
+        elif random_equip_enemy == 2:
+            weapon = self.generate_random_weapon()
+            enemy.equip(weapon)
+        elif random_equip_enemy == 3:
+            spell = self.generate_random_spell()
+            weapon = self.generate_random_weapon()
+            enemy.equip(weapon)
+            enemy.learn(spell)
+
+
+    def battle(self, enemy):
+       self.equip_enemy(enemy)
+       fight = Fight(self.hero, enemy)
+       fight.start()
+       hero_wins = fight.hero_wins()
+       return hero_wins
 
     def can_move(self, row, col):
         if col >= len(self._map[0]) or col < 0 or row >= len(self._map) or row < 0 or self._map[row][col] == '#':
@@ -129,9 +148,20 @@ class Dungeon:
                 self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
             elif self._map[new_hero_position[0]][new_hero_position[1]] == "E":
                 self.in_fight = True
-                if self.hero_attack(by='weapon') or self.hero_attack(by='spell'):
-                    enemy = self.enemies[new_hero_position]
-                    self.start_battle(enemy)
+
+                enemy = self.enemies[new_hero_position]
+                hero_wins = self.battle(enemy)
+                if hero_wins:
+                    del self.enemies[new_hero_position] #remove enemy from map
+                    self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
+                    self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
+                else:
+                    self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
+                    self.hero._health = self.hero._max_health
+                    self.hero._mana = self.hero._max_mana
+                    respawn = self.spawn(self.hero)
+                    if respawn == False:
+                        print('Game over')
 
                 #return False
             else:
