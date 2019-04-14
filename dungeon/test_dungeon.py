@@ -21,13 +21,13 @@ class TestClassDungeon(unittest.TestCase):
         d._map = [['.', '.', '#', '#', '.', '.', '#', '.', '.', 'T'], ['#', 'T', '#', '#', '#', '.', '#', '#', '#', '.'], ['#', '.', '#', '#', '#', 'E', '#', '#', '#', 'E'], ['#', '.', 'E', '.', '.', '.', '#', '#', '#', '.'], ['#', '#', '#', 'T', '#', '#', '#', '#', '#', 'G']]
         hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
         self.assertEqual(d.spawn(hero), False)
+
     def test_spawn_when_there_are_S_locations_on_the_map_then_spawn_hero_in_first_S_location_and_return_true(self):
         d = Dungeon('test_level.txt')
         hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
         assert d.spawn(hero) == True
         expected_result = [['.', '.', '#', '#', '.', '.', 'H', '.', '.', 'T'], ['#', 'T', '#', '#', 'S', '.', '#', '#', '#', '.'], ['#', '.', '#', '#', '#', 'E', '#', '#', '#', 'E'], ['#', '.', 'E', '.', '.', '.', '#', '#', '#', '.'], ['#', '#', '#', 'T', '#', '#', '#', '#', '#', 'G']]
         self.assertEqual(d._map, expected_result)
-
 
     def test_can_move_when_is_passed_coordinat_that_is_out_of_range_then_return_false(self):
         d = Dungeon('test_level.txt')
@@ -99,8 +99,7 @@ class TestClassDungeon(unittest.TestCase):
         d.spawn(hero)
         spell = Spell(name='Fireball', damage=10, mana_cost=20, cast_range=2)
         d.hero.learn(spell)
-        self.assertEqual(d.check_for_enemy_in_range(spell.cast_range), None)
-
+        self.assertFalse(d.check_for_enemy_in_range(spell.cast_range))
 
     def test_check_for_enemy_in_range_when_is_passed_hero_spell_range_and_there_is_enemy_in_this_range_then_returns_true(self):
         d = Dungeon('test_level.txt')
@@ -164,6 +163,7 @@ class TestClassDungeon(unittest.TestCase):
         d.hero.learn(spell)
         d.move_hero('left')
         self.assertTrue(d.hero_attack('spell'))
+
 
 
 
