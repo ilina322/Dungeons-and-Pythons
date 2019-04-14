@@ -94,22 +94,23 @@ class TestClassDungeon(unittest.TestCase):
         w = d.generate_random_weapon()
         self.assertTrue(isinstance(w, Weapon)) 
 
-    def test_check_for_enemy_in_range_when_is_passed_hero_spell_range_and_there_is_no_enemy_in_this_range_then_returns_false(self):
+    def test_check_for_enemy_in_range_when_is_passed_hero_spell_range_and_there_is_no_enemy_in_this_range_then_returns_none(self):
         d = Dungeon('test_level.txt')
         hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
         d.spawn(hero)
         spell = Spell(name='Fireball', damage=10, mana_cost=20, cast_range=2)
         d.hero.learn(spell)
-        self.assertFalse(d.check_for_enemy_in_range(spell.cast_range))
+        self.assertEqual(d.check_for_enemy_in_range(spell.cast_range), None)
 
-    def test_check_for_enemy_in_range_when_is_passed_hero_spell_range_and_there_is_enemy_in_this_range_then_returns_true(self):
+    def test_check_for_enemy_in_range_when_is_passed_hero_spell_range_and_there_is_enemy_in_this_range_then_returns_that_enemy(self):
         d = Dungeon('test_level.txt')
         hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
         d.spawn(hero)
         d.move_hero('left')
+        d.create_enemies()
         spell = Spell(name='Fireball', damage=10, mana_cost=20, cast_range=2)
         d.hero.learn(spell)
-        self.assertTrue(d.check_for_enemy_in_range(spell.cast_range))
+        self.assertEqual(d.check_for_enemy_in_range(spell.cast_range), None)
 
     def test_hero_attack_when_is_passed_weapon_and_hero_is_not_equipped_with_any_weapon_then_print_message(self):
         d = Dungeon('test_level.txt')
@@ -155,7 +156,7 @@ class TestClassDungeon(unittest.TestCase):
         message = 'Nothing in casting range {}'.format(d.hero._spell.cast_range)
         self.assertEqual(d.hero_attack('spell'), print(message))
 
-    def test_hero_attack_when_is_passed_spell_and_there_is_enemy_in_hero_cast_range_then_return_true(self):
+    def test_hero_attack_when_is_passed_spell_and_there_is_enemy_in_hero_cast_range_but_there_is_not_enough_space_to_cast_then_return_none(self):
         d = Dungeon('test_level.txt')
         hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
         d.spawn(hero)
@@ -163,7 +164,7 @@ class TestClassDungeon(unittest.TestCase):
         spell = Spell(name='Fireball', damage=10, mana_cost=20, cast_range=2)
         d.hero.learn(spell)
         d.move_hero('left')
-        self.assertTrue(d.hero_attack('spell'))
+        self.assertEqual(d.hero_attack('spell'), None)
 
 
 
