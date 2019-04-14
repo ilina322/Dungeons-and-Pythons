@@ -5,7 +5,7 @@ from spell import *
 from weapon import *
 
 class Person:
-    def __init__(self, health, mana, mana_regeneration_rate):
+    def __init__(self, health, mana, mana_regeneration_rate = 0):
         self._mana_regeneration_rate = mana_regeneration_rate
         self._max_health = health
         self._max_mana = mana

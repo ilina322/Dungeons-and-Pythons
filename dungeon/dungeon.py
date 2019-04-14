@@ -2,7 +2,9 @@ import random
 import json
 import sys
 sys.path.insert(0, '../hero')
+sys.path.insert(0, '../enemy')
 from hero import *
+from enemy import *
 
 class Dungeon:
     def __init__(self, file_name):
@@ -10,6 +12,7 @@ class Dungeon:
         self._map = self.create_map()
         self.hero = None
         self.in_fight = False
+        self.enemies = {}
 
     def create_map(self):
         with open(self.file_name, 'r') as f:
@@ -24,6 +27,15 @@ class Dungeon:
             map_list.append(list_col)
 
         return map_list
+
+    def create_enemies(self):
+        for row in range(len(self._map)):
+            for col in range(len(self._map[0])):
+                if self._map[row][col] == 'E':
+                    new_enemy = Enemy(health = random.randint(1,10)*10, mana = random.randint(1,15)*10, damage = random.randint(1,15)*10)
+                    self.enemies.update({(row, col) : new_enemy})
+
+
 
 
     def print_map(self):
@@ -158,3 +170,7 @@ class Dungeon:
             else:
                 print('you do not know any spell')
 
+map = Dungeon('level.txt')
+map.create_enemies()
+for key, val in map.enemies.items():
+    print('{}:{}'.format(key, val))

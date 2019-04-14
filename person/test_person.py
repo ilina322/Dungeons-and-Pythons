@@ -48,7 +48,7 @@ class TestPerson(unittest.TestCase):
 
     def test_when_equip_person_then_set_person_weapon_to_given_one(self):
         p = Person(health=100, mana=100, mana_regeneration_rate=10)
-        w = Weapon( 'ass', 20)
+        w = Weapon( 'hammer', 20)
         p.equip(w)
         self.assertEqual(p._weapon, w)
 
