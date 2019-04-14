@@ -16,6 +16,7 @@ class Dungeon:
         self._map = self.create_map()
         self.hero = None
         self.in_fight = False
+        self.hero_is_on_start_position = False
         self.enemies = {}
 
 
@@ -144,7 +145,11 @@ class Dungeon:
             if self._map[new_hero_position[0]][new_hero_position[1]] == "T":
                 print('Found treasure!')
                 self.win_random_treasure()
-                self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
+                if self.hero_is_on_start_position:
+                    self._map[curr_hero_position[0]][curr_hero_position[1]] = 'S'
+                    self.hero_is_on_start_position = False
+                else:
+                    self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
                 self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
             elif self._map[new_hero_position[0]][new_hero_position[1]] == "E":
                 print('Start a fight!')
@@ -153,19 +158,36 @@ class Dungeon:
                 hero_wins = self.battle(enemy)
                 if hero_wins:
                     del self.enemies[new_hero_position] #remove enemy from map
-                    self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
+                    if self.hero_is_on_start_position:
+                        self._map[curr_hero_position[0]][curr_hero_position[1]] = 'S'
+                        self.hero_is_on_start_position = False
+                    else:
+                        self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
                     self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
                 else:
-                    self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
+                    if self.hero_is_on_start_position:
+                        self._map[curr_hero_position[0]][curr_hero_position[1]] = 'S'
+                        self.hero_is_on_start_position = False
+                    else:
+                        self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
                     self.hero._health = self.hero._max_health
                     self.hero._mana = self.hero._max_mana
                     respawn = self.spawn(self.hero)
                     if respawn == False:
                         print('Game over')
-
-                #return False
-            else:
+            elif self._map[new_hero_position[0]][new_hero_position[1]] == "S":
+                self.hero_is_on_start_position = True
                 self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
+                self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
+
+            elif self._map[new_hero_position[0]][new_hero_position[1]] == "G":
+                print('You win')
+            else:
+                if self.hero_is_on_start_position:
+                    self._map[curr_hero_position[0]][curr_hero_position[1]] = 'S'
+                    self.hero_is_on_start_position = False
+                else:
+                    self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
                 self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
 
         return can_move_on
@@ -203,19 +225,7 @@ class Dungeon:
             else:
                 print('you do not know any spell')
 
-h = Hero(name="Bron", title="Dragonslayer", health=100, mana=10, mana_regeneration_rate=2)
-d = Dungeon('level.txt')
-d.spawn(h)
-d.print_map()
-d.create_enemies()
-w = Weapon(name='Sword', damage=20)
-s = Spell(name='Fireball', damage=30, mana_cost=20, cast_range=2)
-d.hero.learn(s)
-d.hero.equip(w)
-d.move_hero('left')
-d.move_hero('down')
-d.move_hero('down')
-d.print_map()
+                
 
 
 
