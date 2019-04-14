@@ -86,11 +86,3 @@ class Fight:
         return False
 
 
-w = Weapon(name='Sword', damage=20)
-s = Spell(name='Fireball', damage=30, mana_cost=20, cast_range=2)
-h = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
-e = Enemy(health=100, mana=150, damage=10)
-e.learn(s)
-h.equip(w)
-f = Fight(h, e)
-f.start()
