@@ -47,8 +47,12 @@ class Dungeon:
 
     def spawn(self, hero):
         self.hero = hero
+        self.hero._health = self.hero._max_health
+        self.hero._mana = self.hero._max_mana
         for row in range(len(self._map)):
             for col in range(len(self._map[0])):
+                if self._map[row][col] == 'H':
+                    self._map[row][col] = '.'
                 if self._map[row][col] == 'S':
                     self._map[row][col] = 'H'
                     return True
@@ -103,18 +107,18 @@ class Dungeon:
 
 
     def battle(self, enemy):
-       self.equip_enemy(enemy)
-       fight = Fight(self.hero, enemy)
-       fight.start()
-       hero_wins = fight.hero_wins()
-       if hero_wins:
-            del self.enemies[new_hero_position] #remove enemy from map
-            self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
-            self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
-        else:
-            self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
-            self.hero._health = self.hero._max_health
-            self.hero._mana = self.hero._max_mana
+        self.equip_enemy(enemy)
+        fight = Fight(self.hero, enemy)
+        fight.start()
+        hero_wins = fight.hero_wins()
+        for k, v in self.enemies.items():
+                    if v == enemy:
+                        row, col = k
+                        if hero_wins:
+                            self._map[row][col] = '.'
+                            del self.enemies[k]
+                            break
+        if not fight.hero_wins():
             respawn = self.spawn(self.hero)
             if respawn == False:
                 print('Game over')
@@ -163,36 +167,13 @@ class Dungeon:
                 self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
             elif self._map[new_hero_position[0]][new_hero_position[1]] == "E":
                 self.in_fight = True
-
                 enemy = self.enemies[new_hero_position]
-                hero_wins = self.battle(enemy)
-<<<<<<< HEAD
-                if hero_wins:
-                    del self.enemies[new_hero_position] #remove enemy from map
-                    if self.hero_is_on_start_position:
-                        self._map[curr_hero_position[0]][curr_hero_position[1]] = 'S'
-                        self.hero_is_on_start_position = False
-                    else:
-                        self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
-                    self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
-                else:
-                    if self.hero_is_on_start_position:
-                        self._map[curr_hero_position[0]][curr_hero_position[1]] = 'S'
-                        self.hero_is_on_start_position = False
-                    else:
-                        self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
-                    self.hero._health = self.hero._max_health
-                    self.hero._mana = self.hero._max_mana
-                    respawn = self.spawn(self.hero)
-                    if respawn == False:
-                        print('Game over')
+                self.battle(enemy)
+
             elif self._map[new_hero_position[0]][new_hero_position[1]] == "S":
                 self.hero_is_on_start_position = True
                 self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
                 self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
-=======
-                
->>>>>>> 439183154c5cc0698bc302d84c7d6a008d5d563c
 
             elif self._map[new_hero_position[0]][new_hero_position[1]] == "G":
                 print('You win')
@@ -236,6 +217,7 @@ class Dungeon:
               if self.check_for_enemy_in_range(self.hero._spell.cast_range) != None:
                 e = self.check_for_enemy_in_range(self.hero._spell.cast_range)
                 self.battle(e)
+
                 print("There are enemies near you!")
                 return True
               else:
@@ -243,19 +225,15 @@ class Dungeon:
             else:
                 print('you do not know any spell')
 
-<<<<<<< HEAD
-                
-=======
->>>>>>> 439183154c5cc0698bc302d84c7d6a008d5d563c
 
 def main():
     command = ''
-    h = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
+    h = Hero(name="Bron", title="Dragonslayer", health=10, mana=100, mana_regeneration_rate=2)
     d = Dungeon('cast_test_map.txt')
     d.spawn(h)
     d.create_enemies()
     w = Weapon(name='Sword', damage=20)
-    s = Spell(name='Fireball', damage=30, mana_cost=20, cast_range=2)
+    s = Spell(name='Fireball', damage=0, mana_cost=20, cast_range=2)
     d.hero.learn(s)
     d.hero.equip(w)
     d.print_map()
