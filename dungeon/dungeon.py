@@ -39,8 +39,6 @@ class Dungeon:
                     self.enemies.update({(row, col) : new_enemy})
 
 
-
-
     def print_map(self):
         for row in self._map:
             print(''.join(row))
@@ -130,11 +128,10 @@ class Dungeon:
                 self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
                 self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
             elif self._map[new_hero_position[0]][new_hero_position[1]] == "E":
-                print('Start a fight!')
                 self.in_fight = True
                 if self.hero_attack(by='weapon') or self.hero_attack(by='spell'):
                     enemy = self.enemies[new_hero_position]
-                    #self.start_battle(enemy)
+                    self.start_battle(enemy)
 
                 #return False
             else:
@@ -176,16 +173,38 @@ class Dungeon:
             else:
                 print('you do not know any spell')
 
-h = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
-d = Dungeon('level.txt')
-d.spawn(h)
-d.create_enemies()
-w = Weapon(name='Sword', damage=20)
-s = Spell(name='Fireball', damage=30, mana_cost=20, cast_range=2)
-d.hero.learn(s)
-d.hero.equip(w)
-e = Enemy(health=100, mana=150, damage=10)
-d.start_battle(e)
+
+def main():
+    command = ''
+    h = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
+    d = Dungeon('level.txt')
+    d.spawn(h)
+    d.create_enemies()
+    w = Weapon(name='Sword', damage=20)
+    s = Spell(name='Fireball', damage=30, mana_cost=20, cast_range=2)
+    d.hero.learn(s)
+    d.hero.equip(w)
+    d.print_map()
+
+    while(True):
+        command = input("Enter command: ")
+        if command == 'w':
+            d.move_hero('up')
+        elif command == 'a':
+            d.move_hero('left')
+        elif command == 's':
+            d.move_hero('down')
+        elif command == 'd':
+            d.move_hero('right')
+        elif command == 'c':
+            d.hero_attack(by='spell')
+        d.print_map()
+
+    e = Enemy(health=100, mana=150, damage=10)
+    d.start_battle(e)
+
+if __name__ == '__main__':
+    main()
 
 
 

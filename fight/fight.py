@@ -74,23 +74,27 @@ class Fight:
             print(text)
 
     def start(self):
+        print("A battle has stated between {0} and an enemy! {1} health is {2} , Enemy health is {3}".format(self.hero.known_as(), self.hero.known_as(),
+            self.hero.health, self.enemy.health))
         while(self.enemy.is_alive() and self.hero.is_alive()):
             self.hero_attack()
             self.enemy_attack()
 
     def hero_wins(self):
-        if self.enemy.is_alive() and not self.hero.is_alive():
-            return False
-        elif not self.enemy.is_alive() and self.hero.is_alive():
+        if not self.enemy.is_alive() and self.hero.is_alive():
             return True
         return False
 
 
-w = Weapon(name='Sword', damage=20)
-s = Spell(name='Fireball', damage=30, mana_cost=20, cast_range=2)
-h = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
-e = Enemy(health=100, mana=150, damage=10)
-e.learn(s)
-h.equip(w)
-f = Fight(h, e)
-f.start()
+def main():
+    w = Weapon(name='Sword', damage=20)
+    s = Spell(name='Fireball', damage=30, mana_cost=20, cast_range=2)
+    h = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
+    e = Enemy(health=100, mana=150, damage=10)
+    e.learn(s)
+    h.equip(w)
+    f = Fight(h, e)
+    f.start()
+
+if __name__ == '__main__':
+    main()
