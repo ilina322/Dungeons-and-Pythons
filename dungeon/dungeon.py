@@ -3,8 +3,10 @@ import json
 import sys
 sys.path.insert(0, '../hero')
 sys.path.insert(0, '../enemy')
+sys.path.insert(0, '../fight')
 from hero import *
 from enemy import *
+from fight import *
 
 class Dungeon:
     def __init__(self, file_name):
@@ -13,6 +15,7 @@ class Dungeon:
         self.hero = None
         self.in_fight = False
         self.enemies = {}
+
 
     def create_map(self):
         with open(self.file_name, 'r') as f:
@@ -84,8 +87,9 @@ class Dungeon:
             if self.hero != None:
                 self.hero.learn(spell)
 
-    def start_battle(self):
-        pass
+    def start_battle(self, enemy):
+        fight = Fight(self.hero, enemy)
+        fight.start()
 
     def can_move(self, row, col):
         if col >= len(self._map[0]) or col < 0 or row >= len(self._map) or row < 0 or self._map[row][col] == '#':
@@ -129,7 +133,9 @@ class Dungeon:
                 print('Start a fight!')
                 self.in_fight = True
                 if self.hero_attack(by='weapon') or self.hero_attack(by='spell'):
-                    pass
+                    enemy = self.enemies[new_hero_position]
+                    #self.start_battle(enemy)
+
                 #return False
             else:
                 self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
@@ -170,7 +176,16 @@ class Dungeon:
             else:
                 print('you do not know any spell')
 
-map = Dungeon('level.txt')
-map.create_enemies()
-for key, val in map.enemies.items():
-    print('{}:{}'.format(key, val))
+h = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
+d = Dungeon('level.txt')
+d.spawn(h)
+d.create_enemies()
+w = Weapon(name='Sword', damage=20)
+s = Spell(name='Fireball', damage=30, mana_cost=20, cast_range=2)
+d.hero.learn(s)
+d.hero.equip(w)
+e = Enemy(health=100, mana=150, damage=10)
+d.start_battle(e)
+
+
+
