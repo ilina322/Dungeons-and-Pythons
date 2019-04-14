@@ -227,15 +227,30 @@ class Dungeon:
 
 
 def main():
-        d = Dungeon('test_level.txt')
-        hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
-        d.spawn(hero)
-        d.create_enemies()
-        spell = Spell(name='Fireball', damage=10, mana_cost=20, cast_range=2)
-        d.hero.learn(spell)
-        d.move_hero('left')
+    command = ''
+    h = Hero(name="Bron", title="Dragonslayer", health=10, mana=100, mana_regeneration_rate=2)
+    d = Dungeon('cast_test_map.txt')
+    d.spawn(h)
+    d.create_enemies()
+    w = Weapon(name='Sword', damage=20)
+    s = Spell(name='Fireball', damage=0, mana_cost=20, cast_range=2)
+    d.hero.learn(s)
+    d.hero.equip(w)
+    d.print_map()
+
+    while(True):
+        command = input("Enter command: ")
+        if command == 'w':
+            d.move_hero('up')
+        elif command == 'a':
+            d.move_hero('left')
+        elif command == 's':
+            d.move_hero('down')
+        elif command == 'd':
+            d.move_hero('right')
+        elif command == 'c':
+            d.hero_attack(by='spell')
         d.print_map()
-        d.hero_attack('spell')
 
 if __name__ == '__main__':
     main()
