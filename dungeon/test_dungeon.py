@@ -3,6 +3,7 @@ import dungeon
 from dungeon import *
 
 class TestClassDungeon(unittest.TestCase):
+
     def test_initial_value(self):
         d = Dungeon('test_level.txt')
         assert d.file_name == 'test_level.txt'
@@ -163,7 +164,6 @@ class TestClassDungeon(unittest.TestCase):
         d.hero.learn(spell)
         d.move_hero('left')
         self.assertTrue(d.hero_attack('spell'))
-
 
 
 
