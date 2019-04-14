@@ -38,7 +38,7 @@ class Dungeon:
         for row in range(len(self._map)):
             for col in range(len(self._map[0])):
                 if self._map[row][col] == 'E':
-                    new_enemy = Enemy(health = random.randint(1,10)*10, mana = random.randint(1,15)*10, damage = random.randint(1,15)*10)
+                    new_enemy = Enemy(health = random.randint(1,10)*10, mana = random.randint(1,15)*10, damage = random.randint(1,20))
                     self.enemies.update({(row, col) : new_enemy})
 
     def print_map(self):
@@ -107,7 +107,17 @@ class Dungeon:
        fight = Fight(self.hero, enemy)
        fight.start()
        hero_wins = fight.hero_wins()
-       return hero_wins
+       if hero_wins:
+            del self.enemies[new_hero_position] #remove enemy from map
+            self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
+            self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
+        else:
+            self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
+            self.hero._health = self.hero._max_health
+            self.hero._mana = self.hero._max_mana
+            respawn = self.spawn(self.hero)
+            if respawn == False:
+                print('Game over')
 
     def can_move(self, row, col):
         if col >= len(self._map[0]) or col < 0 or row >= len(self._map) or row < 0 or self._map[row][col] == '#':
@@ -152,10 +162,11 @@ class Dungeon:
                     self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
                 self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
             elif self._map[new_hero_position[0]][new_hero_position[1]] == "E":
-                print('Start a fight!')
                 self.in_fight = True
+
                 enemy = self.enemies[new_hero_position]
                 hero_wins = self.battle(enemy)
+<<<<<<< HEAD
                 if hero_wins:
                     del self.enemies[new_hero_position] #remove enemy from map
                     if self.hero_is_on_start_position:
@@ -179,6 +190,9 @@ class Dungeon:
                 self.hero_is_on_start_position = True
                 self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
                 self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
+=======
+                
+>>>>>>> 439183154c5cc0698bc302d84c7d6a008d5d563c
 
             elif self._map[new_hero_position[0]][new_hero_position[1]] == "G":
                 print('You win')
@@ -194,18 +208,18 @@ class Dungeon:
 
     def check_for_enemy_in_range(self, spell_range):
         curr_hero_position = self.find_hero_position()
-        row = curr_hero_position[0]
-        col = curr_hero_position[1]
+        row, col = curr_hero_position
         for num in range(1, spell_range + 1):
-            if self._map[row + num][col] == 'E':
-                return True
-            elif self._map[row][col + num] == 'E':
-                return True
-            elif self._map[row - num][col] == 'E':
-                return True
-            elif self._map[row][col - num] == 'E':
-                return True
-        return False
+            if row + num < len(self._map) and row - num >= 0 and col + num < len(self._map[0]) and col - num >= 0:
+                if self._map[row + num][col] == 'E':
+                    return self.enemies[(row + num, col)]
+                elif self._map[row][col + num] == 'E':
+                    return self.enemies[(row, col + num)]
+                elif self._map[row - num][col] == 'E':
+                    return self.enemies[(row - num, col)]
+                elif self._map[row][col - num] == 'E':
+                    return self.enemies[(row, col - num)]
+        return None
 
 
     def hero_attack(self, by):
@@ -219,14 +233,49 @@ class Dungeon:
                 print('you are not equipped')
         else:
             if self.hero._spell != None:
-              if self.check_for_enemy_in_range(self.hero._spell.cast_range):
-                  return True
-              print('Nothing in casting range {}'.format(self.hero._spell.cast_range))
+              if self.check_for_enemy_in_range(self.hero._spell.cast_range) != None:
+                e = self.check_for_enemy_in_range(self.hero._spell.cast_range)
+                self.battle(e)
+                print("There are enemies near you!")
+                return True
+              else:
+                print('Nothing in casting range {0}, or not enough space to cast {1}'.format(self.hero._spell.cast_range, self.hero._spell.name))
             else:
                 print('you do not know any spell')
 
+<<<<<<< HEAD
                 
+=======
+>>>>>>> 439183154c5cc0698bc302d84c7d6a008d5d563c
 
+def main():
+    command = ''
+    h = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
+    d = Dungeon('cast_test_map.txt')
+    d.spawn(h)
+    d.create_enemies()
+    w = Weapon(name='Sword', damage=20)
+    s = Spell(name='Fireball', damage=30, mana_cost=20, cast_range=2)
+    d.hero.learn(s)
+    d.hero.equip(w)
+    d.print_map()
+
+    while(True):
+        command = input("Enter command: ")
+        if command == 'w':
+            d.move_hero('up')
+        elif command == 'a':
+            d.move_hero('left')
+        elif command == 's':
+            d.move_hero('down')
+        elif command == 'd':
+            d.move_hero('right')
+        elif command == 'c':
+            d.hero_attack(by='spell')
+        d.print_map()
+
+if __name__ == '__main__':
+    main()
 
 
 
