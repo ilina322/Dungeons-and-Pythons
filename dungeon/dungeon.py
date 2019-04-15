@@ -81,11 +81,11 @@ class Dungeon:
         if treasure == 1:
             mana_points = random.randint(1,30)
             self.hero.take_mana(mana_points)
-            print(str(mana_points) + " mana!")
+            print("{0} mana!, {1} current mana is {2}".format(str(mana_points), self.hero.known_as(), self.hero.mana))
         elif treasure == 2:
             health_points = random.randint(1,30)
             self.hero.take_healing(health_points)
-            print(str(health_points) + " health!")
+            print("{0} health!, {1} current health is {2}".format(str(health_points), self.hero.known_as(), self.hero.health))
         elif treasure == 3:
             weapon = self.generate_random_weapon()
             print(weapon.name + " found!")
@@ -187,8 +187,12 @@ class Dungeon:
 
             elif self.map[new_hero_position[0]][new_hero_position[1]] == "G":
                 self.save_spawn_point(curr_hero_position)
-                print('You win')
-                self.game_over = True
+                if not self.enemies:
+                    print('#   #  #####  #   #    #         #  #  ##    #\n#   #  #   #  #   #    #         #  #  # #   #\n#####  #   #  #   #     #   #   #   #  #  #  #\n    #  #   #  #   #      # # # #    #  #   # #\n#####  #####  #####       #   #     #  #    ##')
+                    self.game_over = True
+                else:
+                    print("You have to kill all enemies!")
+                    self.spawn(self.hero)
             else:
                 self.save_spawn_point(curr_hero_position)
                 self.map[new_hero_position[0]][new_hero_position[1]] = 'H'
@@ -221,31 +225,29 @@ class Dungeon:
             if self.hero._weapon != None:
                if self.in_fight:
                    return True
-               print('you should be in fight in order to use your weapon')
+               print('You should be in fight in order to use your weapon!')
             else:
-                print('you are not equipped')
+                print('You are not equipped!')
         else:
             if self.hero._spell != None:
               if self.check_for_enemy_in_range(self.hero._spell.cast_range) != None:
                 e = self.check_for_enemy_in_range(self.hero._spell.cast_range)
                 self.battle(e)
-
-                print("There are enemies near you!")
                 return True
               else:
                 print('Nothing in casting range {0}, or not enough space to cast {1}'.format(self.hero._spell.cast_range, self.hero._spell.name))
             else:
-                print('you do not know any spell')
+                print('You do not know any spell!')
 
 
 def main():
     command = ''
-    h = Hero(name="Bron", title="Dragonslayer", health=10, mana=100, mana_regeneration_rate=2)
-    d = Dungeon('cast_test_map.txt')
+    h = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
+    d = Dungeon('level.txt')
     d.spawn(h)
     d.create_enemies()
     w = Weapon(name='Sword', damage=20)
-    s = Spell(name='Fireball', damage=0, mana_cost=20, cast_range=2)
+    s = Spell(name='Fireball', damage=10, mana_cost=20, cast_range=2)
     d.hero.learn(s)
     d.hero.equip(w)
     d.print_map()
