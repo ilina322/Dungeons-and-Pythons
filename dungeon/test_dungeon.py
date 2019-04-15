@@ -19,7 +19,7 @@ class TestClassDungeon(unittest.TestCase):
 
     def test_spawn_when_there_is_no_S_location_on_the_map_then_return_false(self):
         d = Dungeon('empty.txt')
-        d._map = [['.', '.', '#', '#', '.', '.', '#', '.', '.', 'T'], ['#', 'T', '#', '#', '#', '.', '#', '#', '#', '.'], ['#', '.', '#', '#', '#', 'E', '#', '#', '#', 'E'], ['#', '.', 'E', '.', '.', '.', '#', '#', '#', '.'], ['#', '#', '#', 'T', '#', '#', '#', '#', '#', 'G']]
+        d.map = [['.', '.', '#', '#', '.', '.', '#', '.', '.', 'T'], ['#', 'T', '#', '#', '#', '.', '#', '#', '#', '.'], ['#', '.', '#', '#', '#', 'E', '#', '#', '#', 'E'], ['#', '.', 'E', '.', '.', '.', '#', '#', '#', '.'], ['#', '#', '#', 'T', '#', '#', '#', '#', '#', 'G']]
         hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
         self.assertEqual(d.spawn(hero), False)
 
@@ -28,7 +28,7 @@ class TestClassDungeon(unittest.TestCase):
         hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
         assert d.spawn(hero) == True
         expected_result = [['.', '.', '#', '#', '.', '.', 'H', '.', '.', 'T'], ['#', 'T', '#', '#', 'S', '.', '#', '#', '#', '.'], ['#', '.', '#', '#', '#', 'E', '#', '#', '#', 'E'], ['#', '.', 'E', '.', '.', '.', '#', '#', '#', '.'], ['#', '#', '#', 'T', '#', '#', '#', '#', '#', 'G']]
-        self.assertEqual(d._map, expected_result)
+        self.assertEqual(d.map, expected_result)
 
     def test_can_move_when_is_passed_coordinat_that_is_out_of_range_then_return_false(self):
         d = Dungeon('test_level.txt')
@@ -53,36 +53,33 @@ class TestClassDungeon(unittest.TestCase):
         d.spawn(hero)
         self.assertEqual(d.find_hero_position(), (0, 6))
 
-    def test_move_hero_when_is_passed_direction_that_will_move_him_into_a_obstacle_then_return_false(self):
+    def test_when_hero_is_moved_outside_the_map_then_return_no_coordinates(self):
         d = Dungeon('test_level.txt')
         hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
         d.spawn(hero)
+        self.assertEqual(d.find_new_position('down'), None)
 
-        self.assertEqual(d.move_hero('down'), False)
+    def test_when_hero_is_moved_onto_an_obstacle_then_return_no_coordinates(self):
+        d = Dungeon('test_level.txt')
+        hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
+        d.spawn(hero)
+        self.assertEqual(d.find_new_position('up'), None)
 
+    def test_when_hero_is_moved_on_a_free_spot_then_return_coordinates_tuple(self):
+        d = Dungeon('test_level.txt')
+        hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
+        d.spawn(hero)
+        self.assertEqual(d.find_new_position('left'), (0,5))
 
-    def test_move_hero_when_is_passed_direction_that_will_move_him_into_an_enemy_then_return_true_and_print_message_that_a_figth_is_started(self):
+    def test_when_hero_is_moved_on_an_enemy_then_return_coordinates_no_coordinates(self):
         d = Dungeon('test_level.txt')
         hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
         d.spawn(hero)
         d.create_enemies()
-        d.move_hero('left')
-        d.move_hero('down')
-        self.assertEqual(d.move_hero('down'), True)
-
-    def test_hero_move_when_is_passed_direction_that_will_move_him_into_treasure_then_return_true_and_print_message_that_a_treasure_is_found(self):
-        d = Dungeon('test_level.txt')
-        hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
-        d.spawn(hero)
-        d.move_hero('right')
-        d.move_hero('right')
-        self.assertEqual(d.move_hero('right'), True)
-
-    def test_move_hero_when_is_passed_direction_that_will_move_him_outside_the_map_then_return_false(self):
-        d = Dungeon('test_level.txt')
-        hero = Hero(name="Bron", title="Dragonslayer", health=100, mana=100, mana_regeneration_rate=2)
-        d.spawn(hero)
-        self.assertEqual(d.move_hero('up'), False)
+        d.move_hero("left")
+        d.move_hero("down")
+        d.move_hero("down")
+        self.assertEqual(d.find_new_position('down'), None)
 
     def test_when_generate_random_spell_then_return_spell_instance(self):
         d = Dungeon('test_level.txt')
