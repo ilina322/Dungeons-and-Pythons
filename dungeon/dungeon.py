@@ -140,23 +140,20 @@ class Dungeon:
                     return (row, col)
 
     def find_new_position(self, direction):
+        curr_hero_position = self.find_hero_position()
         if direction == 'up':
-            curr_hero_position = self.find_hero_position()
             can_move_on = self.can_move(curr_hero_position[0] - 1, curr_hero_position[1])
             new_hero_position = (curr_hero_position[0] - 1, curr_hero_position[1])
 
         elif direction == 'down':
-            curr_hero_position = self.find_hero_position()
             can_move_on = self.can_move(curr_hero_position[0] + 1, curr_hero_position[1])
             new_hero_position = (curr_hero_position[0] + 1, curr_hero_position[1])
 
         elif direction == 'left':
-            curr_hero_position = self.find_hero_position()
             can_move_on = self.can_move(curr_hero_position[0], curr_hero_position[1] - 1)
             new_hero_position = (curr_hero_position[0], curr_hero_position[1] - 1)
 
         else:
-            curr_hero_position = self.find_hero_position()
             can_move_on = self.can_move(curr_hero_position[0], curr_hero_position[1] + 1)
             new_hero_position = (curr_hero_position[0], curr_hero_position[1] + 1)
         if can_move_on:
@@ -171,30 +168,24 @@ class Dungeon:
             if self.map[new_hero_position[0]][new_hero_position[1]] == "T":
                 print('Found treasure!')
                 self.win_random_treasure()
-                if self.hero_is_on_start_position:
-                    self.map[curr_hero_position[0]][curr_hero_position[1]] = 'S'
-                    self.hero_is_on_start_position = False
-                else:
-                    self.map[curr_hero_position[0]][curr_hero_position[1]] = '.'
+                self.save_spawn_point(curr_hero_position)
                 self.map[new_hero_position[0]][new_hero_position[1]] = 'H'
             elif self.map[new_hero_position[0]][new_hero_position[1]] == "E":
+                # self.save_spawn_point(curr_hero_position)
                 self.in_fight = True
                 enemy = self.enemies[new_hero_position]
                 self.battle(enemy)
 
             elif self.map[new_hero_position[0]][new_hero_position[1]] == "S":
+                self.save_spawn_point(curr_hero_position)
                 self.hero_is_on_start_position = True
-                self.map[curr_hero_position[0]][curr_hero_position[1]] = '.'
                 self.map[new_hero_position[0]][new_hero_position[1]] = 'H'
 
             elif self.map[new_hero_position[0]][new_hero_position[1]] == "G":
+                self.save_spawn_point(curr_hero_position)
                 print('You win')
             else:
-                if self.hero_is_on_start_position:
-                    self.map[curr_hero_position[0]][curr_hero_position[1]] = 'S'
-                    self.hero_is_on_start_position = False
-                else:
-                    self.map[curr_hero_position[0]][curr_hero_position[1]] = '.'
+                self.save_spawn_point(curr_hero_position)
                 self.map[new_hero_position[0]][new_hero_position[1]] = 'H'
 
     def check_for_enemy_in_range(self, spell_range):
@@ -212,6 +203,12 @@ class Dungeon:
                     return self.enemies[(row, col - num)]
         return None
 
+    def save_spawn_point(self, curr_hero_position):
+        if self.hero_is_on_start_position:
+            self.map[curr_hero_position[0]][curr_hero_position[1]] = 'S'
+            self.hero_is_on_start_position = False
+        else:
+            self.map[curr_hero_position[0]][curr_hero_position[1]] = '.'
 
     def hero_attack(self, by):
         curr_hero_position = self.find_hero_position()
