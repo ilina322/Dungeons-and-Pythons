@@ -76,6 +76,13 @@ class Dungeon:
         weapon_dict = random.choice(weapons)
         return Weapon(**weapon_dict)
 
+    def check_mana(self):
+        print("{0} current mana is {1}".format(self.hero.known_as(), self.hero.mana))
+
+    def check_health(self):
+        print("{0} current health is {1}".format(self.hero.known_as(), self.hero.health))
+
+
     def win_random_treasure(self):
         treasure = random.randint(1,4)
         if treasure == 1:
@@ -252,6 +259,7 @@ def main():
     d.hero.equip(w)
     d.print_map()
 
+    print("Commands:\nw - up\na - left\ns - down\nd - right\nc - cast spell\nh - check health\nm - check mana")
     while not d.game_over:
         command = input("Enter command: ")
         os.system('cls||clear')
@@ -265,6 +273,10 @@ def main():
             d.move_hero('right')
         elif command == 'c':
             d.hero_attack(by='spell')
+        elif command == 'h':
+            d.check_health()
+        elif command == 'm':
+            d.check_mana()
         d.print_map()
 
 if __name__ == '__main__':
