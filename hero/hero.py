@@ -28,6 +28,16 @@ class Hero(Person):
                 return self._spell.damage
         return 0
 
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def title(self):
+        return self._title
+    
+    
+
 def main():
     pass
 

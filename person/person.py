@@ -23,6 +23,20 @@ class Person:
         return self._mana > spell.mana_cost
 
     @property
+    def mana_regeneration_rate(self):
+        return self._mana_regeneration_rate
+    
+
+    @property
+    def max_health(self):
+        return self._max_health
+    
+    @property
+    def max_mana(self):
+        return self._max_mana
+    
+
+    @property
     def health(self):
         return self._health
 

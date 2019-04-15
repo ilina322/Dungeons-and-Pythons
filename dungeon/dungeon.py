@@ -47,8 +47,8 @@ class Dungeon:
 
     def spawn(self, hero):
         self.hero = hero
-        self.hero._health = self.hero._max_health
-        self.hero._mana = self.hero._max_mana
+        self.hero._health = self.hero.max_health
+        self.hero._smana = self.hero.max_mana
         for row in range(len(self.map)):
             for col in range(len(self.map[0])):
                 if self.map[row][col] == 'H':
@@ -171,7 +171,6 @@ class Dungeon:
                 self.save_spawn_point(curr_hero_position)
                 self.map[new_hero_position[0]][new_hero_position[1]] = 'H'
             elif self.map[new_hero_position[0]][new_hero_position[1]] == "E":
-                # self.save_spawn_point(curr_hero_position)
                 self.in_fight = True
                 enemy = self.enemies[new_hero_position]
                 self.battle(enemy)
