@@ -1,6 +1,7 @@
 import random
 import json
 import sys
+import os
 sys.path.insert(0, '../hero')
 sys.path.insert(0, '../enemy')
 sys.path.insert(0, '../fight')
@@ -246,6 +247,7 @@ def main():
 
     while(True):
         command = input("Enter command: ")
+        os.system('cls||clear')
         if command == 'w':
             d.move_hero('up')
         elif command == 'a':
@@ -256,6 +258,7 @@ def main():
             d.move_hero('right')
         elif command == 'c':
             d.hero_attack(by='spell')
+
         d.print_map()
 
 if __name__ == '__main__':
