@@ -19,6 +19,7 @@ class Dungeon:
         self.in_fight = False
         self.hero_is_on_start_position = False
         self.enemies = {}
+        self.game_over = False
 
 
     def create_map(self):
@@ -127,6 +128,7 @@ class Dungeon:
             respawn = self.spawn(self.hero)
             if respawn == False:
                 print('Game over')
+                self.game_over = True
                 return True
 
     def can_move(self, row, col):
@@ -184,6 +186,7 @@ class Dungeon:
             elif self.map[new_hero_position[0]][new_hero_position[1]] == "G":
                 self.save_spawn_point(curr_hero_position)
                 print('You win')
+                self.game_over = True
             else:
                 self.save_spawn_point(curr_hero_position)
                 self.map[new_hero_position[0]][new_hero_position[1]] = 'H'
@@ -245,7 +248,7 @@ def main():
     d.hero.equip(w)
     d.print_map()
 
-    while(True):
+    while not d.game_over:
         command = input("Enter command: ")
         os.system('cls||clear')
         if command == 'w':
@@ -258,7 +261,6 @@ def main():
             d.move_hero('right')
         elif command == 'c':
             d.hero_attack(by='spell')
-
         d.print_map()
 
 if __name__ == '__main__':
