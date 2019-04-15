@@ -121,7 +121,9 @@ class Dungeon:
                     if v == enemy:
                         row, col = k
                         if hero_wins:
-                            self.map[row][col] = '.'
+                            curr_row, curr_col = self.find_hero_position()
+                            self.map[curr_row][curr_col] = '.'
+                            self.map[row][col] = 'H'
                             del self.enemies[k]
                             break
         if not fight.hero_wins():
