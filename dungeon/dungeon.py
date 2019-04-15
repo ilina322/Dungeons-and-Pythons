@@ -13,7 +13,7 @@ from person import *
 class Dungeon:
     def __init__(self, file_name):
         self.file_name = file_name
-        self._map = self.create_map()
+        self.map = self.create_map()
         self.hero = None
         self.in_fight = False
         self.hero_is_on_start_position = False
@@ -35,26 +35,28 @@ class Dungeon:
         return map_list
 
     def create_enemies(self):
-        for row in range(len(self._map)):
-            for col in range(len(self._map[0])):
-                if self._map[row][col] == 'E':
+        for row in range(len(self.map)):
+            for col in range(len(self.map[0])):
+                if self.map[row][col] == 'E':
                     new_enemy = Enemy(health = random.randint(1,10)*10, mana = random.randint(1,15)*10, damage = random.randint(1,20))
                     self.enemies.update({(row, col) : new_enemy})
 
     def print_map(self):
-        for row in self._map:
+        for row in self.map:
             print(''.join(row))
 
     def spawn(self, hero):
         self.hero = hero
         self.hero._health = self.hero._max_health
         self.hero._mana = self.hero._max_mana
-        for row in range(len(self._map)):
-            for col in range(len(self._map[0])):
-                if self._map[row][col] == 'H':
-                    self._map[row][col] = '.'
-                if self._map[row][col] == 'S':
-                    self._map[row][col] = 'H'
+        for row in range(len(self.map)):
+            for col in range(len(self.map[0])):
+                if self.map[row][col] == 'H':
+                    self.map[row][col] = '.'
+        for row in range(len(self.map)):
+            for col in range(len(self.map[0])):
+                if self.map[row][col] == 'S':
+                    self.map[row][col] = 'H'
                     return True
         return False
 
@@ -76,9 +78,11 @@ class Dungeon:
         treasure = random.randint(1,4)
         if treasure == 1:
             mana_points = random.randint(1,30)
+            self.hero.take_mana(mana_points)
             print(str(mana_points) + " mana!")
         elif treasure == 2:
             health_points = random.randint(1,30)
+            self.hero.take_healing(health_points)
             print(str(health_points) + " health!")
         elif treasure == 3:
             weapon = self.generate_random_weapon()
@@ -115,26 +119,27 @@ class Dungeon:
                     if v == enemy:
                         row, col = k
                         if hero_wins:
-                            self._map[row][col] = '.'
+                            self.map[row][col] = '.'
                             del self.enemies[k]
                             break
         if not fight.hero_wins():
             respawn = self.spawn(self.hero)
             if respawn == False:
                 print('Game over')
+                return True
 
     def can_move(self, row, col):
-        if col >= len(self._map[0]) or col < 0 or row >= len(self._map) or row < 0 or self._map[row][col] == '#':
+        if col >= len(self.map[0]) or col < 0 or row >= len(self.map) or row < 0 or self.map[row][col] == '#':
             return False
         return True
 
     def find_hero_position(self):
-        for row in range(len(self._map)):
-            for col in range(len(self._map[0])):
-                if self._map[row][col] == 'H':
+        for row in range(len(self.map)):
+            for col in range(len(self.map[0])):
+                if self.map[row][col] == 'H':
                     return (row, col)
 
-    def move_hero(self, direction):
+    def find_new_position(self, direction):
         if direction == 'up':
             curr_hero_position = self.find_hero_position()
             can_move_on = self.can_move(curr_hero_position[0] - 1, curr_hero_position[1])
@@ -154,51 +159,56 @@ class Dungeon:
             curr_hero_position = self.find_hero_position()
             can_move_on = self.can_move(curr_hero_position[0], curr_hero_position[1] + 1)
             new_hero_position = (curr_hero_position[0], curr_hero_position[1] + 1)
-
         if can_move_on:
-            if self._map[new_hero_position[0]][new_hero_position[1]] == "T":
+            return new_hero_position
+        else: 
+            return None
+
+    def move_hero(self, direction):
+        curr_hero_position = self.find_hero_position()
+        new_hero_position = self.find_new_position(direction)
+        if new_hero_position != None:
+            if self.map[new_hero_position[0]][new_hero_position[1]] == "T":
                 print('Found treasure!')
                 self.win_random_treasure()
                 if self.hero_is_on_start_position:
-                    self._map[curr_hero_position[0]][curr_hero_position[1]] = 'S'
+                    self.map[curr_hero_position[0]][curr_hero_position[1]] = 'S'
                     self.hero_is_on_start_position = False
                 else:
-                    self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
-                self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
-            elif self._map[new_hero_position[0]][new_hero_position[1]] == "E":
+                    self.map[curr_hero_position[0]][curr_hero_position[1]] = '.'
+                self.map[new_hero_position[0]][new_hero_position[1]] = 'H'
+            elif self.map[new_hero_position[0]][new_hero_position[1]] == "E":
                 self.in_fight = True
                 enemy = self.enemies[new_hero_position]
                 self.battle(enemy)
 
-            elif self._map[new_hero_position[0]][new_hero_position[1]] == "S":
+            elif self.map[new_hero_position[0]][new_hero_position[1]] == "S":
                 self.hero_is_on_start_position = True
-                self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
-                self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
+                self.map[curr_hero_position[0]][curr_hero_position[1]] = '.'
+                self.map[new_hero_position[0]][new_hero_position[1]] = 'H'
 
-            elif self._map[new_hero_position[0]][new_hero_position[1]] == "G":
+            elif self.map[new_hero_position[0]][new_hero_position[1]] == "G":
                 print('You win')
             else:
                 if self.hero_is_on_start_position:
-                    self._map[curr_hero_position[0]][curr_hero_position[1]] = 'S'
+                    self.map[curr_hero_position[0]][curr_hero_position[1]] = 'S'
                     self.hero_is_on_start_position = False
                 else:
-                    self._map[curr_hero_position[0]][curr_hero_position[1]] = '.'
-                self._map[new_hero_position[0]][new_hero_position[1]] = 'H'
-
-        return can_move_on
+                    self.map[curr_hero_position[0]][curr_hero_position[1]] = '.'
+                self.map[new_hero_position[0]][new_hero_position[1]] = 'H'
 
     def check_for_enemy_in_range(self, spell_range):
         curr_hero_position = self.find_hero_position()
         row, col = curr_hero_position
         for num in range(1, spell_range + 1):
-            if row + num < len(self._map) and row - num >= 0 and col + num < len(self._map[0]) and col - num >= 0:
-                if self._map[row + num][col] == 'E':
+            if row + num < len(self.map) and row - num >= 0 and col + num < len(self.map[0]) and col - num >= 0:
+                if self.map[row + num][col] == 'E':
                     return self.enemies[(row + num, col)]
-                elif self._map[row][col + num] == 'E':
+                elif self.map[row][col + num] == 'E':
                     return self.enemies[(row, col + num)]
-                elif self._map[row - num][col] == 'E':
+                elif self.map[row - num][col] == 'E':
                     return self.enemies[(row - num, col)]
-                elif self._map[row][col - num] == 'E':
+                elif self.map[row][col - num] == 'E':
                     return self.enemies[(row, col - num)]
         return None
 

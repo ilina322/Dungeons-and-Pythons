@@ -47,10 +47,12 @@ class Person:
                 self._health = self._max_health
         return True
 
-    def take_mana(self):
-        self._mana += self._mana_regeneration_rate
-        if self._mana > self._max_mana:
-            self._mana = self._max_mana
+    def take_mana(self, mana_points=0):
+        if self._mana < self._max_mana:
+            if mana_points == 0:
+                self._mana += self._mana_regeneration_rate
+            else:
+                self._mana += mana_points
 
     def take_damage(self, damage):
         self._health -= damage
